@@ -19,6 +19,51 @@ type Found = {
 	nextCalls?: number;
 };
 
+/**
+ * Production deploys are Denver Metro Serve-only. Keeping this allowlist at
+ * the edge prevents legacy DealScale routes from becoming public while that
+ * code remains in the shared repository.
+ */
+const denverMetroServePublicPaths = new Set([
+	"/",
+	"/start",
+	"/pricing",
+	"/how-it-works",
+	"/coverage",
+	"/contact",
+	"/privacy",
+	"/tos",
+	"/sla",
+	"/success",
+	"/failed",
+	"/denverserve",
+]);
+
+const denverMetroServePublicPrefixes = ["/our-expertise", "/denverserve/"];
+
+const denverMetroServePublicApiPaths = new Set(["/api/stripe/intent"]);
+
+function isDenverMetroServeOnlyDeploy(): boolean {
+	return (
+		process.env.NODE_ENV === "production" ||
+		process.env.DENVER_METRO_SERVE_ONLY === "true"
+	);
+}
+
+function isDenverMetroServePublicPath(pathname: string): boolean {
+	return (
+		denverMetroServePublicPaths.has(pathname) ||
+		denverMetroServePublicPrefixes.some((prefix) => pathname.startsWith(prefix))
+	);
+}
+
+function notFoundResponse(): NextResponse {
+	return new NextResponse("Not Found", {
+		status: 404,
+		headers: { "Content-Type": "text/plain; charset=utf-8" },
+	});
+}
+
 function sanitizeUrlLike(input: string | undefined | null): string {
 	const s = String(input ?? "");
 	// Remove zero-width and unusual unicode spaces around the value
@@ -325,16 +370,29 @@ async function findRedirectBySlug(slug: string): Promise<Found | null> {
 
 export async function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
+	const denverMetroServeOnly = isDenverMetroServeOnlyDeploy();
+
+	if (pathname.startsWith("/api/")) {
+		if (denverMetroServeOnly && !denverMetroServePublicApiPaths.has(pathname)) {
+			return notFoundResponse();
+		}
+		return NextResponse.next();
+	}
+
 	// Skip Next.js internals and API/static routes
 	if (
 		pathname.startsWith("/_next") ||
-		pathname.startsWith("/api/") ||
-		pathname.startsWith("/linktree") ||
 		pathname.startsWith("/favicon") ||
 		pathname.startsWith("/assets/") ||
-		pathname.match(/\.(?:js|css|png|jpg|jpeg|gif|svg|webp|ico|json|txt)$/i)
+		pathname.match(
+			/\.(?:js|css|png|jpg|jpeg|gif|svg|webp|ico|json|txt|xml|webmanifest)$/i,
+		)
 	) {
 		return NextResponse.next();
+	}
+
+	if (denverMetroServeOnly && !isDenverMetroServePublicPath(pathname)) {
+		return notFoundResponse();
 	}
 
 	const slug = pathname.split("/")[1]?.toLowerCase();
@@ -511,11 +569,10 @@ export const config = {
 	matcher: [
 		/*
 		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
 		 * - _next/static (static files)
 		 * - _next/image (image optimization files)
 		 * - favicon.ico (favicon file)
 		 */
-		"/((?!api|_next/static|_next/image|favicon.ico).*)",
+		"/((?!_next/static|_next/image|favicon.ico).*)",
 	],
 };
