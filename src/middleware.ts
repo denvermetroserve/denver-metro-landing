@@ -41,7 +41,20 @@ const denverMetroServePublicPaths = new Set([
 
 const denverMetroServePublicPrefixes = ["/our-expertise", "/denverserve/"];
 
-const denverMetroServePublicApiPaths = new Set(["/api/stripe/intent"]);
+const denverMetroServePublicApiPaths = new Set([
+	"/api/stripe/intent",
+	"/api/servemanager/health",
+	"/api/servemanager/intake",
+	"/api/servemanager/stripe-webhook",
+	"/api/servemanager/webhook",
+]);
+
+function isDenverMetroServePublicApiPath(pathname: string): boolean {
+	return (
+		denverMetroServePublicApiPaths.has(pathname) ||
+		pathname.startsWith("/api/servemanager/")
+	);
+}
 
 function isDenverMetroServeOnlyDeploy(): boolean {
 	return (
@@ -373,7 +386,7 @@ export async function middleware(req: NextRequest) {
 	const denverMetroServeOnly = isDenverMetroServeOnlyDeploy();
 
 	if (pathname.startsWith("/api/")) {
-		if (denverMetroServeOnly && !denverMetroServePublicApiPaths.has(pathname)) {
+		if (denverMetroServeOnly && !isDenverMetroServePublicApiPath(pathname)) {
 			return notFoundResponse();
 		}
 		return NextResponse.next();

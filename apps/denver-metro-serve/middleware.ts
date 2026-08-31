@@ -21,7 +21,11 @@ function notFound() {
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
-	if (pathname === "/api/stripe/intent") return NextResponse.next();
+	if (
+		pathname === "/api/stripe/intent" ||
+		pathname.startsWith("/api/servemanager/")
+	)
+		return NextResponse.next();
 	if (pathname.startsWith("/api/")) return notFound();
 	if (
 		pathname.startsWith("/_next/") ||

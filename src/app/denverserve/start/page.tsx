@@ -101,6 +101,7 @@ export default function StartServePage() {
 	const [checkoutError, setCheckoutError] = useState<string | null>(null);
 	const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 	const [showStepValidationHint, setShowStepValidationHint] = useState(false);
+	const [serveManagerRequestId] = useState(() => crypto.randomUUID());
 	const form = useForm<IntakeFormValues>({
 		resolver: zodResolver(intakeSchema),
 		mode: "onTouched",
@@ -279,6 +280,70 @@ export default function StartServePage() {
 		setCheckoutError(null);
 		setIsCheckoutLoading(true);
 		try {
+			const documents = values.documents.map((document, index) => ({
+				name: document.name,
+				referenceNumber: `dms-${serveManagerRequestId}-${index + 1}`,
+			}));
+			const intakeResponse = await fetch("/api/servemanager/intake", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					requestId: serveManagerRequestId,
+					documents,
+					servee: {
+						serveeType: values.serveeType,
+						recipientName: values.recipientName,
+						businessName: values.businessName,
+						registeredAgent: values.registeredAgent,
+						phoneNumbers: values.phoneNumbers,
+						emailAddresses: values.emailAddresses,
+					},
+					additionalServees: values.additionalServees,
+					addresses: values.addresses,
+					serviceInstructions: values.serviceInstructions,
+					caseName: values.caseName,
+					court: values.court,
+					courtState: values.courtState,
+					courtDate: values.courtDate,
+					caseNumber: values.caseNumber,
+					caseDetails: values.caseDetails,
+					caseType: values.caseType,
+					caseSubtype: values.caseSubtype,
+					deadline: values.deadline,
+					speed: values.speed,
+					difficultServeContext: values.difficultServeContext,
+				}),
+			});
+			const intakePayload = await intakeResponse.json().catch(() => null);
+			if (
+				!intakeResponse.ok ||
+				!intakePayload?.jobId ||
+				!intakePayload?.uploads
+			) {
+				throw new Error(
+					intakePayload?.error || "Unable to prepare the service request.",
+				);
+			}
+
+			await Promise.all(
+				values.documents.map(async (document, index) => {
+					const upload = intakePayload.uploads.find(
+						(candidate: { referenceNumber?: string; putUrl?: string }) =>
+							candidate.referenceNumber === documents[index]?.referenceNumber,
+					);
+					if (!upload?.putUrl) {
+						throw new Error(`Upload URL missing for ${document.name}.`);
+					}
+					const uploadResponse = await fetch(upload.putUrl, {
+						method: "PUT",
+						body: document,
+					});
+					if (!uploadResponse.ok) {
+						throw new Error(`Unable to upload ${document.name}.`);
+					}
+				}),
+			);
+
 			const serviceSpeed = values.speed || selectedSpeed || "Standard";
 			const recipient =
 				(values.serveeType === "business"
@@ -299,6 +364,8 @@ export default function StartServePage() {
 						servee_count: String(serveeCount),
 						recipient,
 						case_name: values.caseName || "Not provided",
+						servemanager_job_id: String(intakePayload.jobId),
+						servemanager_job_number: String(intakePayload.jobNumber),
 					},
 				}),
 			});
