@@ -10,9 +10,15 @@ import { v4 as uuidv4 } from "uuid";
 
 interface CaseStudyDetailHeaderProps {
 	caseStudy: CaseStudy;
+	backHref?: string;
+	backLabel?: string;
 }
 
-const CaseStudyDetailHeader = ({ caseStudy }: CaseStudyDetailHeaderProps) => {
+const CaseStudyDetailHeader = ({
+	caseStudy,
+	backHref = "/case-studies",
+	backLabel = "Back to Case Studies",
+}: CaseStudyDetailHeaderProps) => {
 	const hasMounted = useHasMounted();
 
 	if (!hasMounted) return null;
@@ -32,10 +38,10 @@ const CaseStudyDetailHeader = ({ caseStudy }: CaseStudyDetailHeaderProps) => {
 			<div className="relative mx-auto max-w-7xl">
 				<div className="mb-10 text-center sm:text-left">
 					<Link
-						href="/case-studies"
+						href={backHref}
 						className="inline-flex items-center text-black transition-colors hover:text-black dark:text-white dark:text-white/70"
 					>
-						<ChevronLeft className="mr-1 h-4 w-4" /> Back to Case Studies
+						<ChevronLeft className="mr-1 h-4 w-4" /> {backLabel}
 					</Link>
 				</div>
 

@@ -53,6 +53,8 @@ dev-debug.log
 
 # Generated reports
 coverage/
+!src/app/coverage/
+!src/app/coverage/**
 reports/
 
 # Task files

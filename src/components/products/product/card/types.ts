@@ -72,6 +72,7 @@ export interface CheckoutDialogProps {
 	clientSecret: string | null;
 	price: number;
 	name: string;
+	description?: string;
 	sku?: string;
 	categories?: ProductCategory[];
 }

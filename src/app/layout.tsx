@@ -38,12 +38,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			suppressHydrationWarning
 		>
 			<head>
-				<link
-					rel="preload"
-					as="image"
-					href="/logos/DealScale%20Transparent%20Logo/Deal%20Scale%20No%20Text.png"
-					// type omitted; browsers infer from extension
-				/>
 				<Script id="lo-attribution-capture" strategy="afterInteractive">
 					{`(function () {
   const keys = ["gclid","wbraid","gbraid","utm_source","utm_medium","utm_campaign","utm_term","utm_content","fbclid","msclkid","utm_icp"];
@@ -67,7 +61,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					strategy="afterInteractive"
 				/>
 			</head>
-			<body className="theme-lead-orchestra theme-dealscale min-h-screen bg-background font-sans antialiased">
+			<body className="theme-DenverMetroServe min-h-screen bg-background font-sans antialiased">
 				<SchemaInjector schema={KNOWLEDGE_GRAPH_SCHEMA} />
 				<AppProviders
 					clarityProjectId={clarityProjectId}

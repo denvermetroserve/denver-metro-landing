@@ -7,8 +7,7 @@ export const metadata: Metadata = {
 	description:
 		"Fast, documented service of process for Denver metro law firms and legal professionals.",
 };
-
-export default function HomePage() {
+export default function DenverMetroServeHomePage() {
 	return (
 		<DenverMetroServePage>
 			<HomeContent />

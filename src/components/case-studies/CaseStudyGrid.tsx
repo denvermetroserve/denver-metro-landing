@@ -25,6 +25,8 @@ interface CaseStudyGridProps {
 	 * ! If true, shows the "View All Case Studies" button (used for home/landing page)
 	 */
 	showViewAllButton?: boolean;
+	/** Base route for each case-study detail page. */
+	detailHrefPrefix?: string;
 	/**
 	 * * Controls display of the category filter. Default: true
 	 */
@@ -42,6 +44,7 @@ const CaseStudyGrid: React.FC<CaseStudyGridProps> = ({
 	limit,
 	showViewAllButton = false,
 	showCategoryFilter = true,
+	detailHrefPrefix = "/case-studies",
 }) => {
 	const {
 		status: caseStudyStatus,
@@ -175,7 +178,7 @@ const CaseStudyGrid: React.FC<CaseStudyGridProps> = ({
 							viewport={{ once: true }}
 							className="w-full max-w-sm"
 						>
-							<Link href={`/case-studies/${study.slug}`} passHref>
+							<Link href={`${detailHrefPrefix}/${study.slug}`} passHref>
 								<GlassCard
 									highlighted={study.featured}
 									className="hover:-translate-y-2 flex h-full flex-col transition-all duration-300"

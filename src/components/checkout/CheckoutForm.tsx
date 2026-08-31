@@ -84,6 +84,9 @@ export default function CheckoutForm({
 		plan.price[planType].amount,
 	);
 	const [checkingDiscount, setCheckingDiscount] = useState(false);
+	const [paymentElementError, setPaymentElementError] = useState<string | null>(
+		null,
+	);
 	const hasMounted = useHasMounted();
 	const isSetupMode = mode === "setup";
 	const isTrial = context === "trial";
@@ -467,7 +470,7 @@ export default function CheckoutForm({
 								/>
 								<button
 									type="button"
-									className="flex items-center justify-center gap-2 rounded bg-focus px-4 py-2 font-semibold text-white transition-colors hover:bg-primary/80 dark:bg-blue-700 dark:hover:bg-blue-600"
+									className="flex items-center justify-center gap-2 rounded bg-[#1f23ae] px-4 py-2 font-semibold text-white transition-colors hover:bg-[#3b41c5] disabled:cursor-not-allowed disabled:opacity-60"
 									onClick={handleCheckDiscount}
 									disabled={
 										checkingDiscount || !!discountApplied || !discountCode
@@ -512,12 +515,35 @@ export default function CheckoutForm({
 					) : null}
 
 					<form onSubmit={handleSubmit} className="space-y-6">
-						<PaymentElement />
+						<PaymentElement
+							options={{ layout: "tabs" }}
+							onLoadError={(event) =>
+								setPaymentElementError(
+									event.error.message ||
+										"Stripe could not load the available payment methods. Please refresh and try again.",
+								)
+							}
+						/>
+						{paymentElementError && (
+							<p className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-destructive text-sm">
+								{paymentElementError}
+							</p>
+						)}
 						<p className="mt-3 text-center text-tertiary">
 							{isTrial
 								? "No charge today. Add your payment method to secure your Basic plan after the trial."
 								: "Click a payment method to continue."}
 						</p>
+						{!isTrial && (
+							<div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-foreground">
+								<span className="font-semibold text-sm">
+									{planType === "oneTime" ? "Total due today" : "Full price"}
+								</span>
+								<strong className="font-bold text-foreground text-lg">
+									{formatPrice(displayPrice)}
+								</strong>
+							</div>
+						)}
 						<Button
 							type="submit"
 							disabled={!stripe || loading}
@@ -563,11 +589,6 @@ export default function CheckoutForm({
 							</>
 						) : (
 							<>
-								<p className="bg-gradient-to-r from-primary to-focus bg-clip-text font-semibold text-sm text-transparent">
-									{planType === "oneTime" ? "Total Price" : "Full Price"}:{" "}
-									{formatPrice(displayPrice)}
-								</p>
-
 								{depositError && (
 									<p className="mt-1 text-red-600 text-xs dark:text-red-400">
 										{depositError}

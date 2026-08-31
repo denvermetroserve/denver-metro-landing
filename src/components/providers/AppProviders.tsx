@@ -5,9 +5,7 @@ import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 
-import { PageLayout } from "@/components/layout/PageLayout";
 import { Toaster } from "@/components/ui/toaster";
-import BodyThemeSync from "@/contexts/BodyThemeSync";
 import { AnalyticsConsentProvider } from "@/contexts/analytics-consent-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 
@@ -126,12 +124,11 @@ export function AppProviders({
 		<AnalyticsConsentProvider defaultConsent={defaultAnalyticsConsent}>
 			<ThemeProvider>
 				<ChunkErrorHandler />
-				<BodyThemeSync />
 				<Suspense fallback={<SuspenseFallback />}>
 					<Toaster />
 					<NextAuthProvider>
 						<QueryClientProvider client={queryClient}>
-							<PageLayout>{children}</PageLayout>
+							{children}
 						</QueryClientProvider>
 					</NextAuthProvider>
 				</Suspense>

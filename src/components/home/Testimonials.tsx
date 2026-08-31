@@ -25,6 +25,8 @@ interface TestimonialsProps {
 	testimonials: Testimonial[];
 	title: string;
 	subtitle: string;
+	enablePersonaMode?: boolean;
+	showAttribution?: boolean;
 }
 
 const fallbackTestimonials = getTestimonialsForPersona(DEFAULT_PERSONA_KEY);
@@ -32,8 +34,16 @@ const fallbackTestimonials = getTestimonialsForPersona(DEFAULT_PERSONA_KEY);
 const usePersonaTestimonials = (
 	persona: PersonaKey,
 	externalTestimonials: Testimonial[],
+	enablePersonaMode: boolean,
 ) => {
 	return useMemo(() => {
+		if (!enablePersonaMode && externalTestimonials.length > 0) {
+			return externalTestimonials.map((item, index) => ({
+				...item,
+				id: item.id ?? index,
+			}));
+		}
+
 		const personaSpecific = getTestimonialsForPersona(persona);
 		if (personaSpecific && personaSpecific.length > 0) {
 			return personaSpecific;
@@ -47,10 +57,16 @@ const usePersonaTestimonials = (
 		}
 
 		return fallbackTestimonials;
-	}, [externalTestimonials, persona]);
+	}, [enablePersonaMode, externalTestimonials, persona]);
 };
 
-const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
+const Testimonials = ({
+	testimonials,
+	title,
+	subtitle,
+	enablePersonaMode = true,
+	showAttribution = true,
+}: TestimonialsProps) => {
 	const persona = usePersonaStore((state) => state.persona);
 	const goal = usePersonaStore((state) => state.goal);
 	const personaLabel =
@@ -58,6 +74,7 @@ const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
 	const personaSpecificTestimonials = usePersonaTestimonials(
 		persona,
 		testimonials,
+		enablePersonaMode,
 	);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [activeTab, setActiveTab] = useState<TabKey>("review");
@@ -86,9 +103,13 @@ const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
 		personaSpecificTestimonials[currentIndex] ?? fallbackTestimonials[0];
 
 	useEffect(() => {
+		const testimonialContext = enablePersonaMode
+			? persona
+			: "denver-metro-serve";
+		if (!testimonialContext) return;
 		setCurrentIndex(0);
 		setActiveTab("review");
-	}, [persona]);
+	}, [enablePersonaMode, persona]);
 
 	const fadeInUp = useMemo(
 		() =>
@@ -169,8 +190,8 @@ const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
 			<div className="mx-auto max-w-5xl pt-16 pb-10 text-center">
 				<Header title={title} subtitle={subtitle} size="lg" className="mb-6" />
 				<div className="mx-auto flex max-w-xl flex-col items-center gap-3">
-					<PersonaSwitcher />
-					{goal ? (
+					{enablePersonaMode && <PersonaSwitcher />}
+					{enablePersonaMode && goal ? (
 						<p className="font-medium text-black/70 text-sm dark:text-white/70">
 							<span className="mr-1 text-black/60 dark:text-white/60">
 								Primary goal:
@@ -193,12 +214,14 @@ const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
 					>
 						<div className="relative flex flex-col p-6 sm:p-8 md:p-12">
 							<div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/5 to-transparent" />
-							<motion.div
-								className="mb-6 flex w-full items-center justify-center gap-2"
-								{...fadeIn}
-							>
-								<TestimonialStars rating={currentTestimonial.rating} />
-							</motion.div>
+							{enablePersonaMode && (
+								<motion.div
+									className="mb-6 flex w-full items-center justify-center gap-2"
+									{...fadeIn}
+								>
+									<TestimonialStars rating={currentTestimonial.rating} />
+								</motion.div>
+							)}
 
 							<TestimonialTabs
 								activeTab={activeTab}
@@ -215,17 +238,21 @@ const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
 									name={currentTestimonial.name}
 									image={currentTestimonial.image}
 								/>
-								<div className="text-center sm:text-left">
-									<h4 className="font-semibold text-base sm:text-lg">
-										{currentTestimonial.name}
-									</h4>
-									<p className="text-black text-sm sm:text-sm dark:text-white/60">
-										{currentTestimonial.role}
-									</p>
-									<p className="mt-1 text-primary/80 text-xs uppercase tracking-widest">
-										{personaLabel}
-									</p>
-								</div>
+								{showAttribution && (
+									<div className="text-center sm:text-left">
+										<h4 className="font-semibold text-base sm:text-lg">
+											{currentTestimonial.name}
+										</h4>
+										<p className="text-black text-sm sm:text-sm dark:text-white/60">
+											{currentTestimonial.role}
+										</p>
+										{enablePersonaMode && (
+											<p className="mt-1 text-primary/80 text-xs uppercase tracking-widest">
+												{personaLabel}
+											</p>
+										)}
+									</div>
+								)}
 							</motion.div>
 
 							<div className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:justify-between sm:gap-8">

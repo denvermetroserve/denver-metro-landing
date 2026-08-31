@@ -8,6 +8,18 @@
 			BlinkMacSystemFont, "Segoe UI", sans-serif;
 	}
 
+	/* Scoped token set for the standalone DenverMetroServe launch routes. */
+	.theme-DenverMetroServe {
+		--background: 240 100% 99%;
+		--foreground: 218 45% 12%;
+		--primary: 239 70% 40%;
+		--primary-foreground: 0 0% 100%;
+		--border: 241 20% 81%;
+		--input: 240 100% 99%;
+		--ring: 239 70% 40%;
+		--radius: 0.75rem;
+	}
+
 	code,
 	pre {
 		font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,

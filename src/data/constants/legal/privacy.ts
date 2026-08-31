@@ -1,77 +1,58 @@
 export const privacyPolicyMarkdown = `
-# Privacy Policy
+# Denver Metro Serve Privacy Policy
 
-**Last Updated: July 15, 2025**
+**Last Updated: August 31, 2026**
 
-### 1. Introduction
+### 1. Scope
 
-Deal Scale ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy outlines our practices concerning the collection, use, and disclosure of your information through our AI-powered real estate lookalike audience expansion inspired by How to Win Friends and Influence People services. It applies to data collected via our website, landing pages, social media channels, and other interactions.
-
-This policy is designed to comply with applicable data protection laws, including the Telephone Consumer Protection Act (TCPA), the General Data Protection Regulation (GDPR), the Delaware Personal Data Privacy Act (DPDPA), the Colorado Privacy Act (CPA), and other relevant federal and state regulations.
+Denver Metro Serve ("we," "us," and "our") provides process-serving and related administrative services. This Privacy Policy explains how we collect, use, retain, and disclose information when you visit our website, submit a service request, communicate with us, or use our intake portal. It does not change the client responsibilities in our [Terms of Service](/tos).
 
 ### 2. Information We Collect
 
-We collect information to provide and improve our services. The types of personal data we may collect include:
+Depending on how you use the Services, we may collect:
 
-- **Personal Identification Information:** Name, email address, phone number, physical address.
-- **Property Information:** Details of real estate properties, sourced from publicly available records or provided by you or our clients.
-- **Client-Provided Data:** Information our clients provide to us, for which they warrant they have lawful basis to share.
-- **Communications Data:** Records of your consent, your interactions with our AI agents, and your communication preferences.
-- **Enrichment Data:** Publicly available demographic and social media data used to enhance lead quality, subject to platform Terms of Service and legal limitations.
-- **Technical and Usage Data:** IP address, browser type, usage statistics, and interaction data collected via cookies and analytics tools.
+- **Client and account information:** name, firm or organization, email address, phone number, login information, and billing contact details.
+- **Assignment information:** documents uploaded for service, court and case details, service instructions, recipient or servee names, possible addresses, contact details, and information you choose to provide about access or safety considerations.
+- **Transaction and communication information:** payment confirmation and limited transaction records from our payment processor, messages, support requests, and assignment updates.
+- **Device and website information:** IP address, browser and device information, pages viewed, and cookie or analytics information. Analytics or chat providers collect information only when they are enabled on the website.
 
-### 3. How We Use Your Information
+Please provide only information necessary for the assignment. Do not submit information you are not authorized to provide.
 
-Your personal data is used for the following purposes:
+### 3. How We Use Information
 
-- **To Provide Services:** To generate and qualify sales-ready real estate leads for our clients.
-- **To Communicate With You:** To contact you for marketing purposes via telephone, text message, and direct mail, in strict accordance with the consent you have provided.
-- **For Data Enrichment:** To supplement lead data to provide more personalized and effective services, while adhering to non-discrimination and Fair Housing laws.
-- **To Improve Our Services:** To analyze usage patterns, audit our AI algorithms for bias, and enhance the functionality and security of our platform.
-- **To Comply with Legal Obligations:** To meet our legal, regulatory, and corporate governance requirements.
+We use information to accept, administer, coordinate, document, invoice, and support process-serving assignments; communicate with clients; prevent fraud and misuse; maintain security; improve website reliability; comply with law, court orders, and recordkeeping obligations; and establish, exercise, or defend legal claims.
 
-### 4. Consent for Marketing Communications (TCPA)
+We do not use uploaded service documents or servee information to create real-estate leads, lookalike audiences, or targeted advertising profiles.
 
-We are committed to full compliance with the Telephone Consumer Protection Act (TCPA). We will not contact you via automated calls or texts without your prior express written consent.
+### 4. How We Disclose Information
 
-**What this means:**
+We may disclose information to personnel, process servers, contractors, payment processors, hosting and communications providers, and other service providers who need it to perform the requested services or support our operations. We may also disclose information when required by law, subpoena, court order, or lawful government request; to protect rights, safety, and property; or in connection with a merger, financing, sale, or transfer of business assets.
 
-- **Clear Disclosure:** Before you provide consent, we will clearly explain that you are agreeing to receive marketing calls/texts from Deal Scale, which may be sent using an autodialer or an artificial/prerecorded voice (including our AI agents).
-- **Affirmative Action:** You must take a clear, affirmative action to consent, such as checking a box that is not pre-checked.
-- **No Purchase Necessary:** We will always state that your consent is not a condition of any purchase.
-- **Right to Revoke:** You can revoke your consent at any time through any reasonable means, including by replying "STOP" to any text message or by verbally informing our agents. We maintain an internal Do-Not-Call list to honor all opt-out requests promptly.
+We do not sell assignment information for money. We do not share assignment information for cross-context behavioral advertising. This statement does not prevent disclosures needed to perform the requested service or disclosures required by law.
 
-We maintain detailed records of all consent obtained, including the timestamp, IP address, and the specific form through which consent was given.
+### 5. Cookies, Analytics, and Choices
 
-### 5. Your Data Protection Rights
+We may use cookies and similar technologies for essential site operation, security, preferences, and aggregate measurement. You can control cookies through your browser settings, although essential website features may not work correctly if cookies are disabled. Where required by applicable law, we honor applicable privacy choices, including recognized universal opt-out signals for targeted advertising or sale processing.
 
-Depending on your location, you may have the following rights regarding your personal data:
+### 6. Retention
 
-- **Right to Access:** To request a copy of the personal data we hold about you.
-- **Right to Rectification:** To request correction of inaccurate or incomplete data.
-- **Right to Erasure (Right to be Forgotten):** To request deletion of your personal data under certain conditions.
-- **Right to Restrict Processing:** To request that we limit the processing of your data.
-- **Right to Data Portability:** To receive your data in a structured, machine-readable format.
-- **Right to Opt-Out:** To opt out of the use of your data for targeted advertising, profiling, or its "sale" as defined by applicable laws.
-- **Right to Withdraw Consent:** To withdraw your consent at any time where consent is our legal basis for processing.
+We retain information for as long as reasonably necessary to provide the Services, maintain assignment and payment records, meet legal or contractual obligations, resolve disputes, and enforce agreements. The appropriate retention period depends on the assignment, applicable law, court requirements, and the nature of the record. We may retain de-identified or aggregated information where permitted by law.
 
-To exercise any of these rights, please contact us using the information below.
+### 7. Security
 
-### 6. Data Security
+We use reasonable administrative, technical, and organizational safeguards designed to protect information. No online transmission, storage system, or method of processing is completely secure. Clients should protect account credentials, limit portal access to authorized personnel, and promptly notify us of suspected unauthorized access.
 
-We implement robust technical and organizational measures to protect your data from unauthorized access, alteration, or destruction. These include encryption, access controls, PCI DSS compliance for payment data, and regular security audits.
+### 8. Privacy Rights
 
-### 7. Fair Housing and Non-Discrimination
+Subject to applicable law and verification of your request, you may request access to, correction of, deletion of, or a portable copy of personal information we hold about you. You may also request to opt out of processing that is subject to an applicable opt-out right. Some information may be retained or not disclosed where an exception applies, including to comply with law, protect another person's rights, preserve records, or complete an ongoing assignment.
 
-We are committed to upholding the principles of the Fair Housing Act (FHA) and other anti-discrimination laws. We design and audit our AI systems and targeting criteria to prevent bias and ensure equal opportunity in housing.
+Colorado residents may have rights under the Colorado Privacy Act, including rights to access, correct, delete, and obtain a portable copy of personal data, and to opt out of certain processing. To submit a request, email **privacy@denvermetroserve.com** with the subject line **Privacy Request** and enough information for us to verify and respond to the request. You may appeal a decision by replying to our response with the subject line **Privacy Appeal**.
 
-### 8. Changes to This Privacy Policy
+### 9. Children and Sensitive Information
 
-We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on this page and updating the "Last Updated" date.
+The Services are not directed to children. Do not submit a child's information except where necessary and lawful for an assignment. Some information supplied in documents or service instructions may be sensitive. You are responsible for providing only information you have authority to provide and for identifying any handling requirements that apply to the assignment.
 
-### 9. Contact Us
+### 10. Changes and Contact
 
-If you have any questions, concerns, or requests regarding this Privacy Policy or your data, please contact us at:
-
-**Email:** privacy@dealscale.io
+We may update this Policy by posting a revised version and updating the Last Updated date. Questions, requests, and privacy concerns may be sent to **privacy@denvermetroserve.com**.
 `;
