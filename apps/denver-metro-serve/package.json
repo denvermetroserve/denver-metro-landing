@@ -1,0 +1,47 @@
+{
+	"name": "denver-metro-serve-web",
+	"private": true,
+	"version": "1.0.0",
+	"engines": {
+		"node": ">=20.0.0 <21.0.0",
+		"pnpm": ">=9.0.0"
+	},
+	"scripts": {
+		"dev": "next dev -p 3555",
+		"build": "next build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"@hookform/resolvers": "^3.9.0",
+		"@radix-ui/react-dialog": "^1.1.2",
+		"@radix-ui/react-tabs": "^1.1.0",
+		"@stripe/react-stripe-js": "^3.6.0",
+		"@stripe/stripe-js": "^7.2.0",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"framer-motion": "^12.5.0",
+		"lottie-react": "^2.4.1",
+		"lucide-react": "^0.462.0",
+		"next": "15.5.9",
+		"next-themes": "^0.3.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-hook-form": "^7.53.0",
+		"react-hot-toast": "^2.5.2",
+		"stripe": "^18.0.0",
+		"tailwind-merge": "^2.6.0",
+		"tailwindcss-animate": "^1.0.7",
+		"uuid": "^11.1.0",
+		"zod": "^3.25.67",
+		"zustand": "^5.0.6"
+	},
+	"devDependencies": {
+		"@types/node": "^22.5.5",
+		"@types/react": "^18.3.21",
+		"@types/react-dom": "^18.3.0",
+		"autoprefixer": "^10.4.20",
+		"postcss": "^8.4.47",
+		"tailwindcss": "^3.4.11",
+		"typescript": "^5.8.3"
+	}
+}
