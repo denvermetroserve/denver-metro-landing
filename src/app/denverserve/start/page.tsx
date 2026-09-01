@@ -297,6 +297,10 @@ export default function StartServePage() {
 						registeredAgent: values.registeredAgent,
 						phoneNumbers: values.phoneNumbers,
 						emailAddresses: values.emailAddresses,
+						facebook: values.facebook,
+						instagram: values.instagram,
+						linkedin: values.linkedin,
+						documentIndexes: values.documentIndexes,
 					},
 					additionalServees: values.additionalServees,
 					addresses: values.addresses,
@@ -312,13 +316,16 @@ export default function StartServePage() {
 					deadline: values.deadline,
 					speed: values.speed,
 					difficultServeContext: values.difficultServeContext,
+					addons: values.addons,
+					witnessFeeAmount: values.witnessFeeAmount,
+					stakeoutHours: values.stakeoutHours,
 				}),
 			});
 			const intakePayload = await intakeResponse.json().catch(() => null);
 			if (
 				!intakeResponse.ok ||
-				!intakePayload?.jobId ||
-				!intakePayload?.uploads
+				!Array.isArray(intakePayload?.jobs) ||
+				intakePayload.jobs.length !== serveeCount
 			) {
 				throw new Error(
 					intakePayload?.error || "Unable to prepare the service request.",
@@ -326,22 +333,37 @@ export default function StartServePage() {
 			}
 
 			await Promise.all(
-				values.documents.map(async (document, index) => {
-					const upload = intakePayload.uploads.find(
-						(candidate: { referenceNumber?: string; putUrl?: string }) =>
-							candidate.referenceNumber === documents[index]?.referenceNumber,
-					);
-					if (!upload?.putUrl) {
-						throw new Error(`Upload URL missing for ${document.name}.`);
-					}
-					const uploadResponse = await fetch(upload.putUrl, {
-						method: "PUT",
-						body: document,
-					});
-					if (!uploadResponse.ok) {
-						throw new Error(`Unable to upload ${document.name}.`);
-					}
-				}),
+				intakePayload.jobs.flatMap(
+					(job: {
+						serveeIndex: number;
+						uploads: Array<{ referenceNumber?: string; putUrl?: string }>;
+					}) => {
+						const serveeDocumentIndexes =
+							job.serveeIndex === 0
+								? values.documentIndexes
+								: values.additionalServees[job.serveeIndex - 1]
+										?.documentIndexes || [];
+						return serveeDocumentIndexes.map(async (index: number) => {
+							const document = values.documents[index];
+							const upload = job.uploads.find(
+								(candidate) =>
+									candidate.referenceNumber ===
+									documents[index]?.referenceNumber,
+							);
+							if (!document || !upload?.putUrl) {
+								throw new Error(
+									`Upload URL missing for ${document?.name || "a document"}.`,
+								);
+							}
+							const uploadResponse = await fetch(upload.putUrl, {
+								method: "PUT",
+								body: document,
+							});
+							if (!uploadResponse.ok)
+								throw new Error(`Unable to upload ${document.name}.`);
+						});
+					},
+				),
 			);
 
 			const serviceSpeed = values.speed || selectedSpeed || "Standard";
@@ -364,8 +386,12 @@ export default function StartServePage() {
 						servee_count: String(serveeCount),
 						recipient,
 						case_name: values.caseName || "Not provided",
-						servemanager_job_id: String(intakePayload.jobId),
-						servemanager_job_number: String(intakePayload.jobNumber),
+						servemanager_job_ids: intakePayload.jobs
+							.map((job: { jobId: number }) => job.jobId)
+							.join(","),
+						servemanager_job_numbers: intakePayload.jobs
+							.map((job: { jobNumber: string }) => job.jobNumber)
+							.join(","),
 					},
 				}),
 			});
@@ -614,43 +640,46 @@ function Documents() {
 					Drag files to set the order they should be served.
 				</p>
 			)}
-			{documents.map((file, index) => (
-				<div
-					className={`mt-4 flex items-center justify-between rounded-lg border border-[#c6c5d6] p-4 ${draggedIndex === index ? "opacity-50" : ""}`}
-					draggable
-					key={`${file.name}-${file.size}`}
-					onDragEnd={() => setDraggedIndex(null)}
-					onDragOver={(event) => event.preventDefault()}
-					onDragStart={() => setDraggedIndex(index)}
-					onDrop={(event) => {
-						event.preventDefault();
-						moveDocument(index);
-						setDraggedIndex(null);
-					}}
-				>
-					<span className="flex items-center gap-3">
-						<GripVertical
-							aria-hidden="true"
-							className="size-5 cursor-grab text-[#767685]"
-						/>
-						<FileText className="size-6 text-[#1f23ae]" />
-						{file.name}
-					</span>
-					<span className="text-[#454554] text-sm">
-						{documentPageCounts[index]}{" "}
-						{documentPageCounts[index] === 1 ? "page" : "pages"} ·{" "}
-						{(file.size / 1024 / 1024).toFixed(1)} MB
-					</span>
-					<button
-						aria-label={`Remove ${file.name}`}
-						className="rounded p-2 text-[#ba1a1a] hover:bg-[#ffdad6]"
-						onClick={() => removeDocument(index)}
-						type="button"
+			<ul>
+				{documents.map((file, index) => (
+					<li
+						aria-label={`Drag to reorder ${file.name}`}
+						className={`mt-4 flex items-center justify-between rounded-lg border border-[#c6c5d6] p-4 ${draggedIndex === index ? "opacity-50" : ""}`}
+						draggable
+						key={`${file.name}-${file.size}`}
+						onDragEnd={() => setDraggedIndex(null)}
+						onDragOver={(event) => event.preventDefault()}
+						onDragStart={() => setDraggedIndex(index)}
+						onDrop={(event) => {
+							event.preventDefault();
+							moveDocument(index);
+							setDraggedIndex(null);
+						}}
 					>
-						<Trash2 className="size-4" />
-					</button>
-				</div>
-			))}
+						<span className="flex items-center gap-3">
+							<GripVertical
+								aria-hidden="true"
+								className="size-5 cursor-grab text-[#767685]"
+							/>
+							<FileText className="size-6 text-[#1f23ae]" />
+							{file.name}
+						</span>
+						<span className="text-[#454554] text-sm">
+							{documentPageCounts[index]}{" "}
+							{documentPageCounts[index] === 1 ? "page" : "pages"} ·{" "}
+							{(file.size / 1024 / 1024).toFixed(1)} MB
+						</span>
+						<button
+							aria-label={`Remove ${file.name}`}
+							className="rounded p-2 text-[#ba1a1a] hover:bg-[#ffdad6]"
+							onClick={() => removeDocument(index)}
+							type="button"
+						>
+							<Trash2 className="size-4" />
+						</button>
+					</li>
+				))}
+			</ul>
 		</>
 	);
 }
@@ -847,7 +876,7 @@ function DocumentSelection({
 					{documents.map((document, index) => (
 						<label
 							className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#c6c5d6] p-3 hover:bg-[#f0f3ff]"
-							key={`${document.name}-${document.size}-${index}`}
+							key={`${document.name}-${document.size}-${document.lastModified}`}
 						>
 							<input
 								checked={selected.includes(index)}
@@ -1610,7 +1639,11 @@ function OutcomeCheckbox({
 	checked,
 	label,
 	onChange,
-}: { checked: boolean; label: string; onChange: (checked: boolean) => void }) {
+}: {
+	checked: boolean;
+	label: string;
+	onChange: (checked: boolean) => void;
+}) {
 	return (
 		<label className="flex items-center gap-2 rounded border border-[#c6c5d6] p-3 text-sm">
 			<input

@@ -60,6 +60,7 @@
 		"contact:test": "bash .github/scripts/contact-test.sh",
 		"e2e:intake:tracking": "pnpm exec tsx tools/e2e/intake-tracking-live.ts",
 		"e2e:analytics": "pnpm exec tsx tools/e2e/analytics-event-live.ts",
+		"e2e:servemanager:mock": "pnpm exec tsx tools/e2e/servemanager-mock-live.ts",
 		"doctor:rspack": "pnpm run build:rspack && pnpm dlx @rsdoctor/cli analyze --profile .rsdoctor/manifest.json",
 		"perf:lighthouse:local": "pnpm dlx lighthouse@12 http://localhost:3000/ --preset=perf --output=json --output=html --output-path=reports/lighthouse/local",
 		"perf:lighthouse:prod-local": "lighthouse http://localhost:3000/ --preset=perf --output=json --output=html --output-path=reports/lighthouse/prod",

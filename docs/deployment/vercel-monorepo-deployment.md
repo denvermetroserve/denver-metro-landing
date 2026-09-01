@@ -57,6 +57,7 @@ the repository.
 | `SERVEMANAGER_WEBHOOK_SECRET` | Yes for inbound ServeManager webhooks | Shared secret required by the webhook receiver. |
 | `SERVEMANAGER_INITIAL_JOB_STATUS` | No | Draft job status; defaults to `On Hold`. |
 | `SERVEMANAGER_PAID_JOB_STATUS` | No | Status after a successful Stripe payment; defaults to the initial status. |
+| `SERVEMANAGER_CUSTOM_FIELD_MAP` | No | JSON mapping from Denver Metro Serve field keys to configured ServeManager job custom-field keys. |
 
 Use matching Stripe modes in each environment:
 

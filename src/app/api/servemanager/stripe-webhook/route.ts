@@ -1,5 +1,6 @@
 import { verifyWebhook } from "@/lib/externalRequests/stripe";
 import { serveManager } from "@/lib/servemanager/client";
+import { isServeManagerMockMode } from "@/lib/servemanager/mock";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
@@ -15,17 +16,34 @@ export async function POST(request: Request) {
 
 	try {
 		const event = await verifyWebhook(signature, await request.text());
+		if (isServeManagerMockMode()) {
+			console.info("ServeManager mock payment webhook accepted", {
+				type: event.type,
+			});
+			return NextResponse.json({ received: true, mode: "mock" });
+		}
 		if (event.type === "payment_intent.succeeded") {
 			const paymentIntent = event.data.object as Stripe.PaymentIntent;
-			const jobId = paymentIntent.metadata.servemanager_job_id;
-			if (jobId) {
-				await serveManager.updateJob(jobId, {
-					job_status:
-						process.env.SERVEMANAGER_PAID_JOB_STATUS ||
-						process.env.SERVEMANAGER_INITIAL_JOB_STATUS ||
-						"On Hold",
-					client_transaction_ref: paymentIntent.id,
-				});
+			const jobIds = (
+				paymentIntent.metadata.servemanager_job_ids ||
+				paymentIntent.metadata.servemanager_job_id ||
+				""
+			)
+				.split(",")
+				.map((id) => id.trim())
+				.filter((id) => /^\d+$/u.test(id));
+			if (jobIds.length) {
+				await Promise.all(
+					jobIds.map((jobId) =>
+						serveManager.updateJob(jobId, {
+							job_status:
+								process.env.SERVEMANAGER_PAID_JOB_STATUS ||
+								process.env.SERVEMANAGER_INITIAL_JOB_STATUS ||
+								"On Hold",
+							client_transaction_ref: paymentIntent.id,
+						}),
+					),
+				);
 			}
 		}
 		return NextResponse.json({ received: true });
